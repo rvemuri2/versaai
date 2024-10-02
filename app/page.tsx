@@ -4,14 +4,18 @@ import { useState, useEffect } from "react";
 import { runAi } from "@/actions/ai";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
 
 export default function Page() {
   const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
-  const handleClick = async () => {
+  const [query, setQuery] = useState("");
+  const handleClick = async (e: any) => {
+    e.preventDefault();
     setLoading(true);
     try {
-      const data = await runAi("write a song about love");
+      const data = await runAi(query);
       setResponse(data);
     } catch (e) {
       console.log(e);
@@ -21,11 +25,25 @@ export default function Page() {
   };
   return (
     <>
-      <Button className="bg-blue-500" onClick={handleClick}>
-        Run AI
-      </Button>
-      <hr />
-      <div>{loading ? "Loading..." : response}</div>
+      <div className="m-5">
+        <form onSubmit={handleClick}>
+          <Input
+            className="mb-5"
+            placeholder="Ask Me Anything"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+          <Button className="bg-blue-500 hover:bg-blue-800">
+            Generate with AI
+          </Button>
+        </form>
+        <Card className="mt-5">
+          <CardHeader>AI Response</CardHeader>
+          <CardContent>
+            {loading ? <div>Loading...</div> : <div>{response}</div>}
+          </CardContent>
+        </Card>
+      </div>
     </>
   );
 }
