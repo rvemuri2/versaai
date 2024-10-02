@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 
 import { runAi } from "@/actions/ai";
 
+import { Button } from "@/components/ui/button";
+
 export default function Page() {
   const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
@@ -19,7 +21,9 @@ export default function Page() {
   };
   return (
     <>
-      <button onClick={handleClick}>Run AI</button>
+      <Button className="bg-blue-500" onClick={handleClick}>
+        Run AI
+      </Button>
       <hr />
       <div>{loading ? "Loading..." : response}</div>
     </>
