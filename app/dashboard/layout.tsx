@@ -7,7 +7,7 @@ export default function DashboardLayout({
 }>) {
   return (
     <div className="grid grid-cols-4 gap-4">
-      <div className="col-span1">
+      <div className="col-span-1">
         <SideNav />
       </div>
 
