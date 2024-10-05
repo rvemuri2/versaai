@@ -1,12 +1,16 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import template from "@/utils/template";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { runAi } from "@/actions/ai";
+import "@toast-ui/editor/dist/toastui-editor.css";
+
+import { Editor } from "@toast-ui/react-editor";
 
 export interface Template {
   name: string;
@@ -25,18 +29,31 @@ export interface Form {
 }
 
 export default function Page({ params }: { slug: string }) {
+  const [query, setQuery] = React.useState("");
+  const [content, setContent] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
+  const editorRef = React.useRef<any>(null);
+  React.useEffect(() => {
+    if (content) {
+      const editorInstance = editorRef.current.getInstance();
+      editorInstance.setMarkdown(content);
+    }
+  }, [content]);
   const t = template.find((item) => item.slug === params.slug) as Template;
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
+    try {
+      const data = await runAi(t.aiPrompt + query);
+      setContent(data);
+    } catch (e) {
+      setContent("Error Occurred, try again");
+    } finally {
+      setLoading(false);
+    }
   };
-  const handleChange = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    e.preventDefault();
-  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-5 px-5">
       <div className="col-span-1 bg-slate-100 dark:bg-slate-900 rounded-md border p-5">
@@ -55,21 +72,38 @@ export default function Page({ params }: { slug: string }) {
                 <Input
                   name={item.name}
                   required={item.required}
-                  onChange={handleChange}
+                  onChange={(e) => setQuery(e.target.value)}
                 />
               ) : (
                 <Textarea
                   name={item.name}
                   required={item.required}
-                  onChange={handleChange}
+                  onChange={(e) => setQuery(e.target.value)}
                 />
               )}
             </div>
           ))}
-          <Button type="submit" className="w-full py-6">
-            Generate Content
+          <Button type="submit" className="w-full py-6" disabled={loading}>
+            {loading ? (
+              <Loader2Icon className="animate-spin mr-2" />
+            ) : (
+              "Generate Content"
+            )}
           </Button>
         </form>
+      </div>
+      <div className="col-span-2">
+        <Editor
+          ref={editorRef}
+          initialValue="Generated content will appear here"
+          previewStyle="vertical"
+          height="600px"
+          initialEditType="wysiwyg"
+          useCommandShortcut={true}
+          onChange={() =>
+            setContent(editorRef.current.getInstance().getMarkdown())
+          }
+        />
       </div>
     </div>
   );
