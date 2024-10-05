@@ -4,6 +4,8 @@ import {
   HarmCategory,
   HarmBlockThreshold,
 } from "@google/generative-ai";
+import db from "@/utils/db";
+import Query from "@/models/query";
 const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
 
@@ -42,4 +44,28 @@ export async function runAi(text: string) {
 
   const result = await chatSession.sendMessage(text);
   return result.response.text();
+}
+export async function saveQuery(
+  template: object,
+  email: string,
+  query: string,
+  content: string
+) {
+  try {
+    await db();
+    const newQuery = new Query({
+      template,
+      email,
+      query,
+      content,
+    });
+    await newQuery.save();
+    return {
+      ok: true,
+    };
+  } catch (e) {
+    return {
+      ok: false,
+    };
+  }
 }

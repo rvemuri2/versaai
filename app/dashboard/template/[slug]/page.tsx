@@ -12,6 +12,8 @@ import "@toast-ui/editor/dist/toastui-editor.css";
 
 import { Editor } from "@toast-ui/react-editor";
 import toast from "react-hot-toast";
+import { saveQuery } from "@/actions/ai";
+import { useUser } from "@clerk/nextjs";
 
 export interface Template {
   name: string;
@@ -34,6 +36,8 @@ export default function Page({ params }: { slug: string }) {
   const [content, setContent] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const editorRef = React.useRef<any>(null);
+  const { user } = useUser();
+  const email = user?.primaryEmailAddress?.emailAddress || "";
   React.useEffect(() => {
     if (content) {
       const editorInstance = editorRef.current.getInstance();
@@ -48,6 +52,7 @@ export default function Page({ params }: { slug: string }) {
     try {
       const data = await runAi(t.aiPrompt + query);
       setContent(data);
+      await saveQuery(t, email, query, data);
     } catch (e) {
       setContent("Error Occurred, try again");
     } finally {
