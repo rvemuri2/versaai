@@ -20,6 +20,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Toaster } from "react-hot-toast";
 
 export default function TopNav() {
   const { isSignedIn, user } = useUser();
@@ -28,6 +29,7 @@ export default function TopNav() {
   return (
     <nav className="flex flex-col">
       <div className="flex justify-between items-center p-2 shadow">
+        <Toaster />
         <Link href="/">
           <Image src={logo} alt="Logo" />
         </Link>
