@@ -9,7 +9,6 @@ import {
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Usage from "@/components/nav/usage";
-import SignUpModal from "@/components/modal/sign-up-modal";
 
 export default function SideNav() {
   const path = usePathname();
@@ -63,7 +62,6 @@ export default function SideNav() {
 
       <div className="pb-20 mt-auto">
         <Usage />
-        <SignUpModal />
       </div>
     </div>
   );

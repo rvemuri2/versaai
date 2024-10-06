@@ -7,8 +7,8 @@ import Link from "next/link";
 export default function Usage() {
   const { count, subscribed } = useUsage();
 
-  const credits = Number(process.env.NEXT_PUBLIC_FREE_TIER_USAGE);
-  // const percentage = (count / credits) * 100;
+  const credits = Number(process.env.NEXT_PUBLIC_FREE_TIER_USAGE) || 10000;
+
   const percentage = subscribed ? 100 : Math.min((count / credits) * 100, 100);
 
   return (
@@ -27,7 +27,6 @@ export default function Usage() {
           {subscribed
             ? `Unlimited credits`
             : `${count} / ${credits} credit used`}
-          {/* {count} / {credits} credit used */}
         </h2>
       </div>
 

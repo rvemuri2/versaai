@@ -94,7 +94,7 @@ export async function getQueries(
 export async function usageCount(email: string) {
   await db();
   const currentDate = new Date();
-  const currentYear = currentData.getFullYear();
+  const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth() + 1;
   const result = await Query.aggregate([
     {
