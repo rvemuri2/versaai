@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 import { saveQuery } from "@/actions/ai";
 import { useUser } from "@clerk/nextjs";
 import { Template } from "@/utils/types";
+import { useUsage } from "@/context/usage";
 
 export default function Page({ params }: { slug: string }) {
   const [query, setQuery] = React.useState("");
@@ -22,6 +23,8 @@ export default function Page({ params }: { slug: string }) {
   const [loading, setLoading] = React.useState(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const editorRef = React.useRef<any>(null);
+
+  const { fetchUsage } = useUsage();
   const { user } = useUser();
   const email = user?.primaryEmailAddress?.emailAddress || "";
   React.useEffect(() => {
@@ -39,6 +42,7 @@ export default function Page({ params }: { slug: string }) {
       const data = await runAi(t.aiPrompt + query);
       setContent(data);
       await saveQuery(t, email, query, data);
+      fetchUsage();
     } catch (e) {
       setContent("Error Occurred, try again");
     } finally {

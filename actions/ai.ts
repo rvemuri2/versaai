@@ -94,9 +94,8 @@ export async function getQueries(
 export async function usageCount(email: string) {
   await db();
   const currentDate = new Date();
-  const currentYear = currentDate.getFullYear();
-  const currentMonth = currentDate.getFullMonth() + 1;
-
+  const currentYear = currentData.getFullYear();
+  const currentMonth = currentDate.getMonth() + 1;
   const result = await Query.aggregate([
     {
       $match: {
@@ -113,7 +112,7 @@ export async function usageCount(email: string) {
       $project: {
         wordCount: {
           $size: {
-            $split: [{ $trim: { input: "content" } }, ""],
+            $split: [{ $trim: { input: "$content" } }, " "],
           },
         },
       },
