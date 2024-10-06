@@ -14,27 +14,13 @@ import { Editor } from "@toast-ui/react-editor";
 import toast from "react-hot-toast";
 import { saveQuery } from "@/actions/ai";
 import { useUser } from "@clerk/nextjs";
-
-export interface Template {
-  name: string;
-  slug: string;
-  icon: string;
-  desc: string;
-  category: string;
-  aiPrompt: string;
-  form: Form[];
-}
-export interface Form {
-  label: string;
-  field: string;
-  name: string;
-  required: boolean;
-}
+import { Template } from "@/utils/types";
 
 export default function Page({ params }: { slug: string }) {
   const [query, setQuery] = React.useState("");
   const [content, setContent] = React.useState("");
   const [loading, setLoading] = React.useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const editorRef = React.useRef<any>(null);
   const { user } = useUser();
   const email = user?.primaryEmailAddress?.emailAddress || "";
