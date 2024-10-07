@@ -33,6 +33,7 @@ export default function TopNav() {
         <Link href="/">
           <Image src={logo} alt="Logo" />
         </Link>
+        <Link href="/membership">🔥 Join Free or $0.99/month</Link>
         <div className="flex items-center">
           {isSignedIn && (
             <Link
