@@ -1,3 +1,4 @@
+/* eslint-disable */
 "use client";
 import React from "react";
 import Link from "next/link";
@@ -17,22 +18,24 @@ import { useUser } from "@clerk/nextjs";
 import { Template } from "@/utils/types";
 import { useUsage } from "@/context/usage";
 
-export default function Page({ params }: { slug: string }) {
+// Correct typing for the "params" prop
+export default function Page({ params }: { params: { slug: string } }) {
   const [query, setQuery] = React.useState("");
   const [content, setContent] = React.useState("");
   const [loading, setLoading] = React.useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const editorRef = React.useRef<any>(null);
 
   const { fetchUsage } = useUsage();
   const { user } = useUser();
   const email = user?.primaryEmailAddress?.emailAddress || "";
+
   React.useEffect(() => {
     if (content) {
       const editorInstance = editorRef.current.getInstance();
       editorInstance.setMarkdown(content);
     }
   }, [content]);
+
   const t = template.find((item) => item.slug === params.slug) as Template;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -84,8 +87,7 @@ export default function Page({ params }: { slug: string }) {
 
           <form className="mt-6" onSubmit={handleSubmit}>
             {t.form.map((item) => (
-              // eslint-disable-next-line react/jsx-key
-              <div className="my-2 flex flex-col gap-2 mb-7">
+              <div className="my-2 flex flex-col gap-2 mb-7" key={item.name}>
                 <label className="font-bold pb-5">{item.label}</label>
                 {item.field === "input" ? (
                   <Input

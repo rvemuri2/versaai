@@ -7,7 +7,7 @@ if (!secretKey) {
 }
 
 const stripe = new Stripe(secretKey, {
-  apiVersion: "2024-06-20",
+  apiVersion: "2024-09-30.acacia",
 });
 
 export default stripe;

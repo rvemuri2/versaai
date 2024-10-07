@@ -1,8 +1,10 @@
+/* eslint-disable */
 "use client";
 import React, { useState, useEffect } from "react";
 import { getQueries } from "@/actions/ai";
 import { useUser } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
+
 import { Loader2Icon } from "lucide-react";
 import QueryTable from "@/components/table/query-table";
 

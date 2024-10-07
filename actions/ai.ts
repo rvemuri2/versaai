@@ -6,6 +6,11 @@ import {
 } from "@google/generative-ai";
 import db from "@/utils/db";
 import Query from "@/models/query";
+
+if (!process.env.NEXT_PUBLIC_GEMINI_API_KEY) {
+  throw new Error("NEXT_PUBLIC_GEMINI_API_KEY is not defined");
+}
+
 const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
 
@@ -36,6 +41,7 @@ const generationConfig = {
   maxOutputTokens: 8192,
   responseMimeType: "text/plain",
 };
+
 export async function runAi(text: string) {
   const chatSession = model.startChat({
     generationConfig,
@@ -45,6 +51,7 @@ export async function runAi(text: string) {
   const result = await chatSession.sendMessage(text);
   return result.response.text();
 }
+
 export async function saveQuery(
   template: object,
   email: string,
@@ -91,6 +98,7 @@ export async function getQueries(
     };
   }
 }
+
 export async function usageCount(email: string) {
   await db();
   const currentDate = new Date();
